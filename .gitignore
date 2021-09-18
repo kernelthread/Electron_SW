@@ -1,0 +1,10 @@
+# Ignore generated files
+
+**/*.elf
+**/*.o
+**/*.d
+**/*.obj
+**/*.pdb
+**/*.exe
+**/*.out
+**/*.bin
