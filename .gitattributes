@@ -14,6 +14,8 @@
 *.mak text
 makefile text
 COPYING text
+*.sh text
+*.txt text
 
 
 # Declare files that will always have CRLF line endings on checkout.

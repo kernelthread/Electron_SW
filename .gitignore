@@ -8,3 +8,4 @@
 **/*.exe
 **/*.out
 **/*.bin
+Tools/ROMFS/build_romfs

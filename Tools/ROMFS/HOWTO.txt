@@ -1,0 +1,70 @@
+How to build a MOS ROMFS ROM using this tool
+============================================
+
+You must have the forked version of zopfli here:
+
+https://github.com/kernelthread/zopfli
+
+You need to build this and ensure the resulting executable is visible in the path.
+
+You also need the ACME assembler from here:
+
+https://github.com/meonwax/acme
+
+Again, the executable from there must be visible in the path.
+
+
+Then, build the romfs_build C++ tool. Change directory to Tools/ROMFS, then:
+
+On Windows, run build.win.cmd, with either GCC for Windows (MSys32 works) or
+Microsoft Visual C++ in the path. For Visual Studio 2019 Community Edition, you
+can use the batch file
+
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat
+
+to set up the required environment before running build.win.cmd.
+
+On Linux, make sure gcc is visible in the path, then "source build.linux.sh".
+
+
+Finally, to build a ROM, run the following command:
+
+perl build_romfs_rom.pl -t *MYROM* -v 1 -c "(C) J.BLOGGS 2021" --compress FILE1=C:\AcornFiles\File1Data.bin FILE2=C:\AcornFiles\File2Data.bin
+
+This will create a working directory called romfs_work under the current directory and,
+within that, will create a file MYROM containing a 16K ROM image.
+
+The -t <title> option sets the title of the ROM. It must be a valid Acorn file name
+(up to 10 printable characters, no spaces).
+The -v <n> options sets the version number of the ROM.
+The -c <text> option sets the ROM copyright statement. It must start with (C).
+The --compress option indicates that a compressed ROMFS is needed. If you omit it,
+a normal non-compressed ROMFS image is produced. The --compress option uses the
+DEFLATE algorithm with a window size of 256 bytes. It seems to produce a size
+reduction of 25% to 60% depending on the data.
+
+The name of the working directory can be set with the -w <name> option. It defaults
+to romfs_work.
+The name of the output file can be set with the -o <name> option. It defaults to the
+ROM title (set with -t) with any leading and trailing asterisks removed.
+
+The files in the ROMFS are specified as follows:
+
+<ACORNNAME>=<HOSTPATH>
+
+Any number of these can be placed sequentially at the end of the command line to include
+files in the ROMFS.
+<ACORNNAME> is the name which will be seen by the Acorn MOS - it needs to be a valid
+Acorn file name (up to 10 printable characters, no spaces).
+<HOSTPATH> is the path to the file on the host.
+
+Alternatively, just <HOSTPATH> can be specified. In that case, <ACORNNAME> is derived
+from the host file name by first truncating it to 10 characters if necessary, then
+replacing any characters with codes outside the interval 0x21 to 0x7E with
+underscores.
+
+The script should work from any directory to save polluting the source tree. Just change to:
+
+perl C:\Git\Electron_SW\Tools\ROMFS\build_romfs_rom.pl -t *MYROM* -v 1 -c "(C) J.BLOGGS 2021" --compress FILE1=C:\AcornFiles\File1Data.bin FILE2=C:\AcornFiles\File2Data.bin
+
+modified for wherever your copy of this repository is stored.
